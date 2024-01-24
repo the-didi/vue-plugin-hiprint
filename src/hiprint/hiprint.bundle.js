@@ -7316,8 +7316,6 @@ var hiprint = function (t) {
       this.initResizeBox(t);
     },
     initResizeBox: function initResizeBox(t) {
-      console.log("初始化包围盒")
-
       var e = this;
       n(t).each(function () {
         var o;
@@ -7393,7 +7391,8 @@ var hiprint = function (t) {
         }), n(".easyui-droppable").on("mouseup", function () {
           f.removeClass("resizeing");
         }), e.bindTrigger(n(this));
-      }), e.bindHidePanel();
+      })
+      e.bindHidePanel();
     },
     addHandlerCss: function addHandlerCss(t) {
       for (var e = 0; e < t.length; e++) {
@@ -8305,7 +8304,7 @@ var hiprint = function (t) {
       }
 
       return m(e, t), e.prototype.getReizeableShowPoints = function () {
-        return ["se", "r"];
+        return ["s","e","se","r"];
       }, e.prototype.getData = function (t) {
         var e = "", f = this.getField();
         t ? e = f ? f.split('.').reduce((a, c) => a ? a[c] : t[c], !1) || "" : this.options.src || this.printElementType.getData() : e = this.options.src || this.printElementType.getData();
@@ -9000,12 +8999,10 @@ var hiprint = function (t) {
           }
         })(e, n);
       };
-
       return function (e, n) {
         function i() {
           this.constructor = e;
         }
-
         _t10(e, n), e.prototype = null === n ? Object.create(n) : (i.prototype = n.prototype, new i());
       };
     }(),
@@ -9014,7 +9011,6 @@ var hiprint = function (t) {
         var i = t.call(this, e) || this;
         return i.options = new g.a(n), i.options.setDefault(new g.a(p.a.instance.vline.default).getPrintElementOptionEntity()), i;
       }
-
       return B(e, t), e.prototype.updateDesignViewFromOptions = function () {
         if (this.designTarget) {
           var t = this.getData();
@@ -9683,7 +9679,7 @@ var hiprint = function (t) {
             // 在复制的地方也重新给他算轮次
             const template = s.a.instance.getPrintTemplateById(n.templateId)
             if(a.options.field && template.qtDesigner){
-              a.options.qid = template.qtDesignderFunction(a.options.field)
+              a.options.field = template.qtDesignderFunction(a.options.field)
             }
             n.printElements.push(a), a.design(void 0, n.designPaper);
             console.log('pasteJson success');
@@ -9855,7 +9851,7 @@ var hiprint = function (t) {
             a.setTemplateId(e.templateId), a.setPanel(e), e.appendDesignPrintElement(e.designPaper, a, !0);
             // 如果说编辑器开启qtDesigner,那么就将唯一ID构建唯一ID生成逻辑代码
             if(a.options.field && template.qtDesigner){
-              a.options.qid = template.qtDesignderFunction(a.options.field)
+              a.options.field = template.qtDesignderFunction(a.options.field)
             }
             e.printElements.push(a), a.design(void 0, t);
             o.a.event.trigger("hiprintTemplateDataChanged_" + e.templateId, "新增");
@@ -10420,23 +10416,13 @@ var hiprint = function (t) {
         this.qtDesigner = n.qtDesigner != void 0 ? n.qtDesigner : !0;
         this.qtDesignerMap = {}
         this.qtDesignderFunction = function(field){
-          this.qtDesignerMap = {}
           const fieldTitle = field.split("_")[0]
-          for(const item of this.editingPanel.printElements){
-            if(item.options.field === void 0){
-              continue
-            }
-            const renderKey = item.options.field.split("_")[0]
-            if(this.qtDesignerMap[renderKey] === void 0){
-              this.qtDesignerMap[renderKey] = 1
-            }else{
-              this.qtDesignerMap[renderKey] += 1
-            }
-          }
-          if(this.qtDesignerMap[fieldTitle] === 0||this.qtDesignerMap[fieldTitle] === void 0){
+          if(this.qtDesignerMap[fieldTitle] === void 0){
+            this.qtDesignerMap[fieldTitle] = 0
             return fieldTitle
           }else{
-            return fieldTitle +"_"+ this.qtDesignerMap[fieldTitle]
+            this.qtDesignerMap[fieldTitle] +=1
+            return fieldTitle +"_"+this.qtDesignerMap[fieldTitle]
           }
         }
         var i = new st(n.template || []);
